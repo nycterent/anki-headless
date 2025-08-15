@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  anki-headless:
+    build: .
+    image: anki-headless:latest
+    container_name: anki-headless
+    ports:
+      - "8765:8765"
+    volumes:
+      - anki_data:/home/anki/.local/share/Anki2
+      - anki_media:/home/anki/.local/share/Anki2/User 1/collection.media
+    environment:
+      - ANKI_DATA_DIR=/home/anki/.local/share/Anki2
+      - ANKI_PORT=8765
+      - ANKI_CORS_ORIGINS=*
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8765"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    # Security settings
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+    # Resource limits
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpu_shares: 1024
+
+volumes:
+  anki_data:
+    driver: local
+  anki_media:
+    driver: local
+
+# Alternative configuration for development with host networking
+# Uncomment the configuration below and comment the one above for development
+#
+# services:
+#   anki-headless:
+#     build: .
+#     image: anki-headless:latest
+#     container_name: anki-headless-dev
+#     network_mode: host
+#     volumes:
+#       - ./anki-data:/home/anki/.local/share/Anki2
+#       - ./anki-media:/home/anki/.local/share/Anki2/User 1/collection.media
+#     environment:
+#       - ANKI_DATA_DIR=/home/anki/.local/share/Anki2
+#       - ANKI_PORT=8765
+#       - ANKI_CORS_ORIGINS=*
+#     restart: unless-stopped
