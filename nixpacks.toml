@@ -1,2 +1,5 @@
 [build]
 buildpack = "docker"
+
+[variables]
+NIXPACKS_NO_CACHE = "1"
