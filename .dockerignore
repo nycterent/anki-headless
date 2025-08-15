@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# Test files
+test-*.sh
+
+# Build scripts
+build.sh
+
+# Docker files (not needed in context)
+docker-compose.yml
+.dockerignore
+
+# Local development files
+anki-data/
+anki-media/
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
