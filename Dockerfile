@@ -92,15 +92,15 @@ USER anki
 WORKDIR /home/anki
 
 # Create Anki profile directories
-RUN mkdir -p /home/anki/.local/share/Anki2/User\ 1/addons21/2055492159 \
-    && mkdir -p /home/anki/.local/share/Anki2/User\ 1/collection.media
+RUN mkdir -p "/home/anki/.local/share/Anki2/User 1/addons21/2055492159" \
+    && mkdir -p "/home/anki/.local/share/Anki2/User 1/collection.media"
 
 # Copy AnkiConnect addon
-COPY --from=builder --chown=anki:anki /tmp/ankiconnect/plugin/* /home/anki/.local/share/Anki2/User\ 1/addons21/2055492159/
+COPY --from=builder --chown=anki:anki /tmp/ankiconnect/plugin/* "/home/anki/.local/share/Anki2/User 1/addons21/2055492159/"
 
 # Copy configuration and startup files
-COPY --chown=anki:anki config.json /home/anki/.local/share/Anki2/User\ 1/addons21/2055492159/config.json
-COPY --chown=anki:anki meta.json /home/anki/.local/share/Anki2/User\ 1/addons21/2055492159/meta.json
+COPY --chown=anki:anki config.json "/home/anki/.local/share/Anki2/User 1/addons21/2055492159/config.json"
+COPY --chown=anki:anki meta.json "/home/anki/.local/share/Anki2/User 1/addons21/2055492159/meta.json"
 COPY --chown=anki:anki start-anki.sh /home/anki/start-anki.sh
 
 # Make startup script executable
