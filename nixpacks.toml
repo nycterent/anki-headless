@@ -1,0 +1,81 @@
+[variables]
+ANKI_VERSION = "25.07.5"
+ANKICONNECT_VERSION = "23.10.29.0"
+ANKI_DATA_DIR = "/home/anki/.local/share/Anki2"
+ANKI_PORT = "8765"
+ANKI_CORS_ORIGINS = "*"
+DISPLAY = ":99"
+
+[phases.setup]
+nixPkgs = [
+    "wget",
+    "curl",
+    "unzip",
+    "xorg.xvfb",
+    "python3",
+    "libxcb",
+    "nss",
+    "xorg.libXScrnSaver",
+    "gconf",
+    "xorg.libXrandr",
+    "alsa-lib",
+    "pango",
+    "atk",
+    "cairo",
+    "gtk3",
+    "gdk-pixbuf",
+    "xorg.libXcomposite",
+    "xorg.libXcursor",
+    "xorg.libXdamage",
+    "xorg.libXext",
+    "xorg.libXfixes",
+    "xorg.libXi",
+    "xorg.libXrender",
+    "xorg.libXtst",
+    "cups",
+    "dbus",
+    "expat",
+    "fontconfig",
+    "glib",
+    "nspr",
+    "stdenv.cc.cc",
+    "xorg.libX11",
+    "xorg.libxcb",
+    "libdrm",
+    "libxkbcommon",
+    "at-spi2-atk",
+    "libGL",
+    "mesa",
+    "bash",
+    "coreutils"
+]
+dependsOn = ["download"]
+
+[phases.download]
+cmds = [
+    "mkdir -p /tmp/anki-build",
+    "cd /tmp/anki-build",
+    "wget -O anki.tar.xz 'https://github.com/ankitects/anki/releases/download/${ANKI_VERSION}/anki-${ANKI_VERSION}-linux-qt6.tar.xz'",
+    "tar -xf anki.tar.xz",
+    "wget -O ankiconnect.zip 'https://github.com/FooSoft/anki-connect/releases/download/${ANKICONNECT_VERSION}/anki-connect.zip'",
+    "unzip ankiconnect.zip -d ankiconnect"
+]
+
+[phases.install]
+dependsOn = ["setup", "download"]
+cmds = [
+    "useradd -r -m -d /home/anki anki || true",
+    "cp -r /tmp/anki-build/anki-${ANKI_VERSION}-linux-qt6 /opt/anki",
+    "ln -sf /opt/anki/bin/anki /usr/local/bin/anki",
+    "mkdir -p /home/anki/.local/share/Anki2/User\\ 1/addons21/2055492159",
+    "mkdir -p /home/anki/.local/share/Anki2/User\\ 1/collection.media",
+    "cp -r /tmp/anki-build/ankiconnect/plugin/* /home/anki/.local/share/Anki2/User\\ 1/addons21/2055492159/",
+    "cp config.json /home/anki/.local/share/Anki2/User\\ 1/addons21/2055492159/config.json",
+    "cp meta.json /home/anki/.local/share/Anki2/User\\ 1/addons21/2055492159/meta.json",
+    "cp start-anki.sh /home/anki/start-anki.sh",
+    "chmod +x /home/anki/start-anki.sh",
+    "chown -R anki:anki /home/anki"
+]
+
+[start]
+cmd = "/home/anki/start-anki.sh"
